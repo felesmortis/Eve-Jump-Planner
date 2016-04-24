@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+        <script src=".\jumpPlanner.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('.stations').append(Object.keys(stations).map(function(item) {
+                    return $('<option />').val(item).html(item);
+                }))
+                .on('change', function() {
+                    $('.lightyearsSelect').toggle($(this).val() === "Other");
+                });
+                $('.calculate').on('click', function() {
+                    var $this = $(this);
+                    $this.prop('disabled', true);
+                    calculateJump($('.stations').val(), $('.load').val(), $('.lightyears').val()).then(function(isk) {
+                        $this.prop('disabled', false);
+                        $('.cost').text(isk.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' isk');
+                    });
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <label>
+            Stations:
+            <select class="stations"></select>
+        </label>
+        <label>
+            Load Size:
+            <input type="number" min=1 max=350000 class="load" />
+        </label>
+        <label class="lightyearsSelect" style="display: none;">
+            Lightyears:
+            <input type="text"" class="lightyears" />
+        </label>
+        <input type="button" class="calculate" value="Calculate" />
+        <label>
+            Cost:
+            <span class="cost"></span>
+        </label>
+    </body>
+</html>
