@@ -8,15 +8,31 @@
                     return $('<option />').val(item).html(item);
                 }))
                 .on('change', function() {
-                    $('.lightyearsSelect').toggle($(this).val() === "Other");
+                    if($(this).val() === "Other") {
+                        $('.lightyearsSelect').show();
+                    } else {
+                        $('.lightyearsSelect').hide().val('');
+                    }
                 });
                 $('.calculate').on('click', function() {
+                    $('.errorLabel').hide();
                     var $this = $(this);
                     $this.prop('disabled', true);
-                    calculateJump($('.stations').val(), $('.load').val(), $('.lightyears').val()).then(function(isk) {
+                    try {
+                        calculateJump($('.stations').val(), $('.load').val(), $('.lightyears').val()).then(function(isk) {
+                            $this.prop('disabled', false);
+                            $('.cost').text(isk.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' isk');
+                        }, function(ex) {
+                            $('.errorLabel').show();
+                            $('.error').text(ex);
+                        }).then(function() {
+                            $this.prop('disabled', false);
+                        });
+                    } catch(ex) {
+                        $('.errorLabel').show();
+                        $('.error').text(ex);
                         $this.prop('disabled', false);
-                        $('.cost').text(isk.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' isk');
-                    });
+                    }
                 });
             });
         </script>
@@ -38,6 +54,10 @@
         <label>
             Cost:
             <span class="cost"></span>
+        </label>
+        <label class="errorLabel" style="display: none; color: red;">
+            Error:
+            <span class="error"></span>
         </label>
     </body>
 </html>

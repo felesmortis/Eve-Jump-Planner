@@ -72,6 +72,7 @@ var maxLoad = 350000,
 
 
 function calculateJump(station, loadSize, lightyears) {
+    if(loadSize > 350000 || loadSize < 1) throw "Load size must be between 1 and 350,000m3";
     var fuel;
     var promise = Promise.all([
         sendRequest("GET", url.replace('{0}', isotopes[0])),
@@ -79,7 +80,8 @@ function calculateJump(station, loadSize, lightyears) {
         sendRequest("GET", url.replace('{0}', isotopes[2])),
         sendRequest("GET", url.replace('{0}', isotopes[3]))]);
     var route = stations[station];
-    if(station === "Other" && !lightyears) throw "Lightyears must be specified if Other is selected"
+    if(station === "Other" && !lightyears) throw "Lightyears must be specified if Other is selected";
+    else if(lightyears < 0 || lightyears > 120) throw "Lightyears must be between 0 and 120";
     lightyears = lightyears || (route.To + route.From);
     
     fuel = lightyears * (4400 * (1 - 0.1 * JfcSkill) * (1 - 0.1 * JfSkill));
