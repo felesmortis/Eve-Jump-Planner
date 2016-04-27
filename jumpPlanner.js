@@ -71,7 +71,7 @@ var maxLoad = 350000,
     priceMultiplier = 2;
 
 
-function calculateJump(station, loadSize, lightyears) {
+function calculateJump(station, loadSize, packaged, lightyears) {
     if(loadSize > 350000 || loadSize < 1) throw "Load size must be between 1 and 350,000m3";
     var fuel;
     var promise = Promise.all([
@@ -94,6 +94,6 @@ function calculateJump(station, loadSize, lightyears) {
             }).min();
         });
         var fuelCost = lowestIsotopePrices.reduce(function(a, b) { return a + b; }) / lowestIsotopePrices.length;
-        return ~~(priceMultiplier * ((loadSize / maxLoad) * (fuel * fuelCost)));
+        return ~~((packaged ? 1.5 : 1) * priceMultiplier * ((loadSize / maxLoad) * (fuel * fuelCost)));
     });
 }

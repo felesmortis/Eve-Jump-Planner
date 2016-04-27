@@ -19,7 +19,7 @@
                     var $this = $(this);
                     $this.prop('disabled', true);
                     try {
-                        calculateJump($('.stations').val(), $('.load').val(), $('.lightyears').val()).then(function(isk) {
+                        calculateJump($('.stations').val(), $('.load').val(), $('.packaged').is(":checked"), $('.lightyears').val()).then(function(isk) {
                             $this.prop('disabled', false);
                             $('.cost').text(isk.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' isk');
                         }, function(ex) {
@@ -45,6 +45,10 @@
         <label>
             Load Size:
             <input type="number" min=1 max=350000 class="load" />
+        </label>
+        <label>
+            Packeged ships or containers:
+            <input type="checkbox" class="packaged" />
         </label>
         <label class="lightyearsSelect" style="display: none;">
             Lightyears:
